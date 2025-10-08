@@ -24,6 +24,7 @@ class RegisterController extends Controller
             'password'=> Hash::make($request->input('password')),
             'activo'=> 1,
         ]);
+        
         $userRol=Role::where('name','cliente')->first();
         if ($userRol) {
             $user->assignRole($userRol);

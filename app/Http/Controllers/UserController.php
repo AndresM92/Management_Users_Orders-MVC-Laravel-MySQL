@@ -6,6 +6,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use App\Http\Requests\UserRequest;
 use Spatie\Permission\Models\Role;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 class UserController extends Controller
@@ -38,7 +39,7 @@ class UserController extends Controller
         $registro=new User();
         $registro->name=$request->input('name');
         $registro->email=$request->input('email');
-        $registro->password=bcrypt($request->input('password'));
+        $registro->password=Hash::make($request->input('password'));
         $registro->activo=$request->input('activo');
         $registro->save();
 
@@ -46,12 +47,10 @@ class UserController extends Controller
         return redirect()->route('usuarios.index')->with('mensaje', 'Registro ' . $registro->name . ' agregado correctamente');
     }
 
-
     public function show(User $user)
     {
         
     }
-
 
     public function edit($id)
     {
@@ -61,7 +60,6 @@ class UserController extends Controller
         return view('usuario.action',compact('registro','roles'));
     }
 
- 
     public function update(UserRequest $request, $id)
     {
          $this->authorize('user-edit');
@@ -70,7 +68,7 @@ class UserController extends Controller
         $registro->email=$request->input('email');
 
         if ($request->filled('password')) {
-            $registro->password=bcrypt($request->input('password'));
+            $registro->password= Hash::make($request->input('password'));
         }
 
         $registro->activo=$request->input('activo');

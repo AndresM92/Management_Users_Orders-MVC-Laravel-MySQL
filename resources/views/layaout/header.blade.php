@@ -32,11 +32,11 @@
                                     alt="User Image"/>
                                 <p>
                                     {{Auth::user()->name}}
-                                    <small>Member since Nov. 2019</small>
+                                    <small>Member since Nov. 2025</small>
                                 </p>
                             </li>
                             <li class="user-footer">
-                                <!--<a href="#" class="btn btn-default btn-flat">Perfil</a>-->
+                                <a href="{{route('perfil.edit')}}" class="btn btn-default btn-flat">Perfil</a>
                                 <a href="#" onclick="document.getElementById('logout-form').submit();" class="btn btn-default btn-flat float-end">Cerrar Sesion</a>
                             </li> 
                             <form  class="d-none" action="{{route('logout')}}" id="logout-form" method="post">

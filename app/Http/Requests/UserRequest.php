@@ -3,6 +3,8 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Auth;
 
 class UserRequest extends FormRequest
 {
@@ -21,18 +23,23 @@ class UserRequest extends FormRequest
      */
     public function rules(): array
     {
-        $method=$this->method();
+        $method = $this->method();
+        $id = $this->route('usuarios') ?? Auth::id();
 
-        $rules= [
+        $rules = [
             'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email,' . $this->route('usuario'),
-            
+            'email' => [
+                'required',
+                'email',
+                Rule::unique('users', 'email')->ignore($id),
+            ],
+
         ];
 
-        if ($method==='POST') {
-            $rules['password']='required|min:8|confirmed';
-        }elseif ($method==='PUT') {
-            $rules['password']='nullable|min:8|confirmed';
+        if ($method === 'POST') {
+            $rules['password'] = 'required|min:8|confirmed';
+        } elseif ($method === ['PUT','PATCH']) {
+            $rules['password'] = 'nullable|min:8|confirmed';
         }
 
         return $rules;
@@ -50,10 +57,10 @@ class UserRequest extends FormRequest
             'email.email' => 'Debe ingresar un correo electrónico válido.',
             'email.unique' => 'Este correo electronico ya está registrado.',
 
-            'password.required'=>'el campo contraseña es obligatorio',
-            'password.min'=>'La contraseña debe tener al menos 8 caracteres.',
-            'password.confirmed' =>'Las contraseñas no coinciden'
-            
+            'password.required' => 'el campo contraseña es obligatorio',
+            'password.min' => 'La contraseña debe tener al menos 8 caracteres.',
+            'password.confirmed' => 'Las contraseñas no coinciden'
+
         ];
     }
 }
