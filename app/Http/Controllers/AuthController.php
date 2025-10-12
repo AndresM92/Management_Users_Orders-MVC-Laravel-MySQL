@@ -20,7 +20,7 @@ class AuthController extends Controller
 
             $user = Auth::user();
             if ($user->activo) {
-                return redirect()->route('dashboard');
+                return redirect()->intended();
             } else {
                 Auth::logout();
                 return back()->with('error', 'Su cuenta esta inactiva contacte al administrador');

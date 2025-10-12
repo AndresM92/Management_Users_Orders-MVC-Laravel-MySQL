@@ -1,4 +1,3 @@
-
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <div class="container px-4 px-lg-5">
         <a class="navbar-brand" href="#!">Andres.com</a>
@@ -10,23 +9,28 @@
                 <li class="nav-item"><a class="nav-link active" aria-current="page" href="/">Inicio</a></li>
                 <li class="nav-item"><a class="nav-link" href="#">Acerca</a></li>
                 <li class="nav-item"><a class="nav-link" href="#">Tienda</a></li>
+
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button"
-                        data-bs-toggle="dropdown" aria-expanded="false">Mi cuenta</a>
-                    <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <li><a class="dropdown-item" href="#!">Mis pedidos</a></li>
-                        <li>
-                            <hr class="dropdown-divider" />
-                        </li>
-                        <li><a class="dropdown-item" href="#!">Mi perfil</a></li>
-                    </ul>
+                    @auth
+                        <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button"
+                            data-bs-toggle="dropdown" aria-expanded="false">{{auth()->user()->name}}</a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <li><a class="dropdown-item" href="{{route('perfil.pedidos')}}">Mis pedidos</a></li>
+                            <li>
+                                <hr class="dropdown-divider" />
+                            </li>
+                            <li><a class="dropdown-item" href="{{route('perfil.edit')}}">Mi perfil</a></li>
+                        </ul>
+                    @else
+                    <a class="nav-link" href="{{route('login')}}">Iniciar Sesion</a>
+                    @endauth
                 </li>
             </ul>
-            <a  href="{{route('carrito.mostrar')}}" class="btn btn-outline-dark">
+            <a href="{{ route('carrito.mostrar') }}" class="btn btn-outline-dark">
                 <i class="bi-cart-fill me-1"></i>
                 Pedido
                 <span class="badge bg-dark text-white ms-1 rounded-pill">
-                    {{session('carrito')? array_sum(array_column(session('carrito'),'cantidad')):0}}
+                    {{ session('carrito') ? array_sum(array_column(session('carrito'), 'cantidad')) : 0 }}
                 </span>
             </a>
         </div>

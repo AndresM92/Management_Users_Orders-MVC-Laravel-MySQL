@@ -12,16 +12,18 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\Auth\GoogleController;
+use App\Http\Controllers\PedidoController;
 
-Route::get('/', [WebController::class,'index'])->name('web.index');
-Route::get('/producto/{id}', [WebController::class,'show'])->name('web.show');
 
-Route::get('/carrito', [CarritoController::class,'show_items'])->name('carrito.mostrar');
-Route::post('/carrito/agregar', [CarritoController::class,'add'])->name('carrito.agregar');
-Route::get('/carrito/sumar', [CarritoController::class,'sum'])->name('carrito.sumar');
-Route::get('/carrito/restar', [CarritoController::class,'rest'])->name('carrito.restar');
-Route::get('/carrito/eliminar/{id}', [CarritoController::class,'delete'])->name('carrito.eliminar');
-Route::get('/carrito/vaciar', [CarritoController::class,'empty_car'])->name('carrito.vaciar');
+Route::get('/', [WebController::class, 'index'])->name('web.index');
+Route::get('/producto/{id}', [WebController::class, 'show'])->name('web.show');
+
+Route::get('/carrito', [CarritoController::class, 'show_items'])->name('carrito.mostrar');
+Route::post('/carrito/agregar', [CarritoController::class, 'add'])->name('carrito.agregar');
+Route::get('/carrito/sumar', [CarritoController::class, 'sum'])->name('carrito.sumar');
+Route::get('/carrito/restar', [CarritoController::class, 'rest'])->name('carrito.restar');
+Route::get('/carrito/eliminar/{id}', [CarritoController::class, 'delete'])->name('carrito.eliminar');
+Route::get('/carrito/vaciar', [CarritoController::class, 'empty_car'])->name('carrito.vaciar');
 
 
 Route::middleware(['auth'])->group(function () {
@@ -33,6 +35,12 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('usuarios', UserController::class);
 
     Route::resource('productos', ProductoController::class);
+
+    Route::post('/pedido/realizar', [PedidoController::class, 'realizar'])->name('pedido.realizar');
+    Route::get('/perfil/pedidos', [PedidoController::class, 'index'])->name('perfil.pedidos');
+    Route::patch('/pedidos/{id}/estado', [PedidoController::class, 'changeState'])->name('pedidos.changeStateSend');
+
+
 
     Route::resource('roles', RoleController::class);
 

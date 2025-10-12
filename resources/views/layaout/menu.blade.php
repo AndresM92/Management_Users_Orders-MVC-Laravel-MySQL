@@ -29,6 +29,15 @@
                             </a>
                         </li>
 
+                        <li class="nav-item">
+                            <a href="{{ route('perfil.pedidos') }}" class="nav-link" id="mnPedidos">
+                                <i class="nav-icon bi bi-speedometer"></i>
+                                <p>
+                                    Pedidos
+                                </p>
+                            </a>
+                        </li>
+
                         @canany(['user-list', 'rol-list'])
                             <li class="nav-item" id="mSeguridad">
                                 <a href="#" class="nav-link">
