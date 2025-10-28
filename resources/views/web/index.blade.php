@@ -5,25 +5,28 @@
     <form action="{{ route('web.index') }}" method="GET">
         <div class="container px-4 px-lg-5 mt-4">
             <div class="row">
-                <div class="col-md-8 mb-3">
+                <div class="col-md-7 mb-3">
                     <div class="input-group">
                         <input type="text" class="form-control" id="searchInput" placeholder="Buscar productos..."
                             aria-label="Buscar productos" name="search" value="{{ request('search') }}">
-                        <button class="btn btn-outline-dark" type="button" id="searchButton">
+                        <button class="btn btn-outline-dark" type="submit" id="searchButton">
                             <i class="bi bi-search"></i> Buscar
                         </button>
                     </div>
                 </div>
-                <div class="col-md-4 mb-3">
+                <div class="col-md-5 mb-3">
                     <div class="input-group">
                         <label class="input-group-text" for="sortSelect">Ordenar por:</label>
                         <select class="form-select" id="sortSelect" name="sort">
-                            <option value="name">Nombre</option>
+
                             <option value="priceAsc" {{ request('sort') == 'priceAsc' ? 'selected' : '' }}>Precio: menor a
                                 mayor</option>
                             <option value="priceDesc" {{ request('sort') == 'priceDesc' ? 'selected' : '' }}>Precio: mayor a
                                 menor</option>
                         </select>
+                        <button class="btn btn-outline-dark" type="submit" id="searchButton">
+                            <i class="bi bi-search"></i> Filtrar
+                        </button>
                     </div>
                 </div>
             </div>
@@ -35,28 +38,48 @@
                 @foreach ($productos as $producto)
                     <div class="col mb-5">
                         <div class="card h-100">
-                            <!-- Product image-->
-                            <img class="card-img-top" src="{{asset('uploads/productos/'.$producto->imagen)}}"alt="{{$producto->nombre}}" />
-                            <!-- Product details-->
+
+                            <img class="card-img-top" style="max-width:400px; height: 270px;"
+                                src="{{ asset('uploads/productos/' . $producto->imagen) }}"alt="{{ $producto->nombre }}" />
+                            <!-- -->
                             <div class="card-body p-4">
                                 <div class="text-center">
-                                    <!-- Product name-->
-                                    <h5 class="fw-bolder">{{$producto->nombre}}</h5>
-                                    <!-- Product price-->
-                                    $ {{number_format($producto->precio,2)}}
+
+                                    <h5 class="fw-bolder text_trucado">{{ $producto->nombre }}</h5>
+
+                                    $ {{ number_format($producto->precio_venta, 2) }}
                                 </div>
                             </div>
                             <!-- Product actions-->
                             <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-                                <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="{{route('web.show',$producto->id)}}">Ver
-                                        producto</a></div>
+                                <div class="text-center">
+                                    <a class="btn btn-outline-dark mt-auto"
+                                        href="{{ route('web.show', $producto->id) }}">Ver
+                                        producto
+                                    </a>
+                                    <!--
+                                        <a>
+                                            <form method="POST" action="{{ route('carrito.agregar') }}">
+                                                @csrf
+                                                <input type="hidden" name="producto_id" value="{{ $producto->id }}">
+                                                <button class="btn btn-success mt-2 add-to-cart" type="submit">Agregar Producto</button>
+                                            </form>
+                                        </a>
+                                    -->
+                                    <a> 
+                                        <button class="btn btn-success mt-2 add-to-cart" data-id="{{ $producto->id }}">Agregar
+                                            Producto
+                                        </button>
+                                    </a>
+                                </div>
+
                             </div>
                         </div>
                     </div>
                 @endforeach
             </div>
             <div class="card-footer clearfix">
-                {{$productos->appends(['search'=> request('search'),'sort'=> request('sort')])->links()}}
+                {{ $productos->appends(['search' => request('search'), 'sort' => request('sort')])->links() }}
             </div>
         </div>
     </section>

@@ -29,7 +29,7 @@ class WebController extends Controller
             }
         }
 
-        $productos=$query->paginate(2);
+        $productos=$query->paginate(8);
         return view('web.index',compact('productos'));
     }
 

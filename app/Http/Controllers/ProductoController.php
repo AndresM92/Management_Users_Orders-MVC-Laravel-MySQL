@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Producto;
 use App\Http\Requests\ProductoRequest;
+use App\Models\Categoria;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Support\Str;
 
@@ -16,8 +17,17 @@ class ProductoController extends Controller
     {
         $this->authorize('product-list');
         $text = $request->input('text');
+        /*
         $registros = Producto::where('nombre', 'like', "%{$text}%")
             ->orWhere('codigo', 'like', "%{$text}%")
+            ->orderBy('id', 'desc')
+            ->paginate(10);
+        */
+        $registros = Producto::with('categoria')
+            ->where(function ($query) use ($text) {
+                $query->where('nombre', 'like', "%{$text}%")
+                    ->orWhere('codigo', 'like', "%{$text}%");
+            })
             ->orderBy('id', 'desc')
             ->paginate(10);
         return view('producto.index', compact('registros', 'text'));
@@ -27,18 +37,22 @@ class ProductoController extends Controller
     public function create()
     {
         $this->authorize('product-create');
-        return view('producto.action');
+        $categorias = Categoria::all();
+        return view('producto.action',compact('categorias'));
     }
 
 
-    public function store(Request $request)
+    public function store(ProductoRequest $request)
     {
         $this->authorize('product-create');
         $registro = new Producto();
         $registro->codigo = $request->input('codigo');
         $registro->nombre = $request->input('nombre');
         $registro->precio = $request->input('precio');
+        $registro->categoria_id = $request->input('categoria');
+        $registro->utilidad = $request->input('utilidad');
         $registro->descripcion = $request->input('descripcion');
+        $registro->precio_venta = (($request->input('precio') * $request->input('utilidad')) / 100) + $registro->precio;
         $sufijo = strtolower(Str::random(2));
         $image = $request->file('imagen');
         if (!is_null($image)) {
@@ -62,18 +76,22 @@ class ProductoController extends Controller
     {
         $this->authorize('product-edit');
         $registro = Producto::findOrFail($id);
-        return view('producto.action', compact('registro'));
+        $categorias = Categoria::all();
+        return view('producto.action', compact('registro', 'categorias'));
     }
 
 
-    public function update(Request $request, string $id)
+    public function update(ProductoRequest $request, string $id)
     {
         $this->authorize('product-edit');
         $registro = Producto::findOrFail($id);
         $registro->codigo = $request->input('codigo');
         $registro->nombre = $request->input('nombre');
         $registro->precio = $request->input('precio');
+        $registro->categoria_id = $request->input('categoria');
+        $registro->utilidad = $request->input('utilidad');
         $registro->descripcion = $request->input('descripcion');
+        $registro->precio_venta = (($request->input('precio') * $request->input('utilidad')) / 100) + $registro->precio;
         $sufijo = strtolower(Str::random(2));
         $image = $request->file('imagen');
         if (!is_null($image)) {

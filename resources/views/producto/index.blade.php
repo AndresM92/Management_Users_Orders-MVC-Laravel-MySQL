@@ -29,7 +29,7 @@
                         </div>
 
                         @if (Session::has('mensaje'))
-                            <div class="alert alert-info alert-dismissible fade show">
+                            <div class="alert alert-info alert-dismissible fade show" id="alertss">
                                 {{ Session::get('mensaje') }}
                                 <button type="button" class="btn-close" data-bs-dismiss="alert"
                                     arial-label="close"></button>
@@ -44,6 +44,7 @@
                                         <th style="width: 50px">ID</th>
                                         <th>Codigo</th>
                                         <th>Nombre</th>
+                                        <th>Categoria</th>
                                         <th>Precio</th>
                                         <th>Imagen</th>
                                     </tr>
@@ -75,7 +76,8 @@
                                                 <td>{{ $reg->id }}</td>
                                                 <td>{{ $reg->codigo }}</td>
                                                 <td>{{ $reg->nombre }}</td>
-                                                <td>{{ $reg->precio }}</td>
+                                                <td>{{ $reg->categoria->name}}</td>
+                                                <td>{{ $reg->precio_venta }}</td>
                                                 <td>
                                                     @if ($reg->imagen)
                                                         <img src="{{asset('uploads/productos/'.$reg->imagen)}}" alt="{{$reg->nombre}}" style="max-width:150px; height: 100px;">

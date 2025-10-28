@@ -11,6 +11,7 @@ class CarritoController extends Controller
     {
         $producto = Producto::findOrFail($request->producto_id);
         $cantidad = $request->cantidad ?? 1;
+
         $carrito = session()->get('carrito', []);
 
         if (isset($carrito[$producto->id])) {
@@ -24,8 +25,15 @@ class CarritoController extends Controller
                 'cantidad' => $cantidad,
             ];
         }
+        $noti_cart= collect($carrito)->sum('cantidad');
         session()->put('carrito', $carrito);
-        return redirect()->back()->with('mensaje', 'Producto agregado al carrito');
+        //return redirect()->back()->with('mensaje', 'Producto agregado al carrito');
+        return response()->json
+        ([
+        'status' => 'success',
+        'message' => 'Producto agregado al carrito',
+        'cartCount' => $noti_cart,
+        ]);
     }
 
     public function show_items()

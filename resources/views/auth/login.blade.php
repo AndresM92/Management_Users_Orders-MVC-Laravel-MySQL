@@ -11,7 +11,7 @@
         <div class="card-body login-card-body">
             <p class="login-box-msg">Ingrese sus credenciales</p>
             @if (Session::has('mensaje'))
-                <div class="alert alert-info alert-dismissible fade show mt-2">
+                <div class="alert alert-info alert-dismissible fade show mt-2" id="alertss">
                     {{ Session::get('mensaje') }}
                     <button class="btn-close" data-bs-dismiss="alert" aria-label="close"></button>
                 </div>
@@ -54,7 +54,7 @@
                 </div>
                 <!--end::Row-->
             </form>
-
+            <p class="mb-1 mt-3 text-end"><a href="{{ route('registro') }}">Registrarse</a></p>
             <p class="mb-1 mt-3 text-end"><a href="{{ route('password.request') }}">Recuperar Contraseña</a></p>
         </div>
         <!-- /.login-card-body -->

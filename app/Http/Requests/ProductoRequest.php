@@ -26,25 +26,31 @@ class ProductoRequest extends FormRequest
             'codigo' => ['required', 'string', 'max:16', 'unique:productos,codigo,' . $id],
             'nombre' => ['required', 'string', 'max:100'],
             'precio' => ['required', 'numeric', 'min:0'],
+            'utilidad' => ['required', 'numeric', 'min:0'],
             'descripcion' => ['nullable', 'string', 'max:1000'],
             'imagen' => [$method === 'POST' ? 'required' : 'nullable', 'image', 'mimes:jpg,jpeg,png', 'max:2048'],
         ];
         return $rules;
     }
 
-    public function messasges(): array
+    public function messages(): array
     {
         return [
             'codigo.required' => 'El codigo del producto es obligatorio.',
             'codigo.unique' => 'Este codigo ya esta registrado en otro producto.',
-            'codigo.max' => 'el codigo no puede tener más de 50 caracteres.',
+            'codigo.max' => 'El codigo no puede tener más de 50 caracteres.',
 
             'nombre.required' => 'El nombre del producto es obligatorio.',
             'nombre.max' => 'El nombre no puede tener más de 255 caracteres.',
 
-            'precio.required' => 'el precio del producto es obligatorio.',
+            'precio.required' => 'El precio del producto es obligatorio.',
             'precio.numeric' => 'El precio debe ser un valor numérico.',
             'precio.min' => 'El precio no puede ser negativo.',
+
+            'utilidad.required' => 'La utilidad del producto es obligatorio.',
+            'utilidad.numeric' => 'La utilidad debe ser un valor numérico.',
+            'utilidad.min' => 'La utilidad no puede ser negativa.',
+            'utilidad.max' => 'La utilidad no puede ser mayor a 99.',
 
             'descripion.max' => 'La descripción no puede tener mas de 1000 caracteres.',
 

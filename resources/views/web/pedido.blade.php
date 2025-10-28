@@ -62,14 +62,14 @@
                                 </div>
                             @endforelse
                             @if (session('mensaje'))
-                                <div class="alert alert-success alert-dismissible fade show mt-3" role="alert">
+                                <div class="alert alert-success alert-dismissible fade show mt-3" role="alert" id="alertss">
                                     {{ session('mensaje') }}
                                     <button type="button" class="btn-close" data-bs-dismiss="alert"
                                         aria-label="Cerrar"></button>
                                 </div>
                             @endif
                             @if (session('error'))
-                                <div class="alert alert-danger alert-dismissible fade show mt-3" role="alert">
+                                <div class="alert alert-danger alert-dismissible fade show mt-3" role="alert" id="alertss">
                                     {{ session('error') }}
                                     <button type="button" class="btn-close" data-bs-dismiss="alert"
                                         aria-label="Cerrar"></button>

@@ -53,9 +53,9 @@ class UserRequest extends FormRequest
             'name.string' => 'El nombre debe ser una cadena de texto.',
             'name.max' => 'El nombre no puede tener mas de 255 caracteres.',
 
-            'email.required' => 'El campo nombre es obligatorio.',
+            'email.required' => 'El campo correo es obligatorio.',
             'email.email' => 'Debe ingresar un correo electrónico válido.',
-            'email.unique' => 'Este correo electronico ya está registrado.',
+            'email.unique' => 'Este correo electronico, ya está registrado.',
 
             'password.required' => 'el campo contraseña es obligatorio',
             'password.min' => 'La contraseña debe tener al menos 8 caracteres.',

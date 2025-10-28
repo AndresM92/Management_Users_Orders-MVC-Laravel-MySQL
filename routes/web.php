@@ -6,6 +6,7 @@ use App\Http\Controllers\ProductoController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\WebController;
 use App\Http\Controllers\CarritoController;
+use App\Http\Controllers\MascotasController;
 use App\Http\Controllers\RoleController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
@@ -13,7 +14,7 @@ use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\Auth\GoogleController;
 use App\Http\Controllers\PedidoController;
-
+use App\Models\Mascota;
 
 Route::get('/', [WebController::class, 'index'])->name('web.index');
 Route::get('/producto/{id}', [WebController::class, 'show'])->name('web.show');
@@ -33,8 +34,13 @@ Route::middleware(['auth'])->group(function () {
     })->name('dashboard');
 
     Route::resource('usuarios', UserController::class);
-
     Route::resource('productos', ProductoController::class);
+    Route::resource('mascotas', MascotasController::class);
+
+    //Route::get('mascotas/{user}/enviar-historial', [MascotasController::class, 'send_historial'])->name('mascotas.send_historial_clinico');
+
+    Route::get('mascotas/pdf/ver/{id}', [MascotasController::class, 'verEnLinea'])->name('pdf.ver');
+    Route::get('mascotas/{user}/pdf/enviar', [MascotasController::class, 'send_historial'])->name('mascotas.send_historial_clinico');
 
     Route::post('/pedido/realizar', [PedidoController::class, 'realizar'])->name('pedido.realizar');
     Route::get('/perfil/pedidos', [PedidoController::class, 'index'])->name('perfil.pedidos');

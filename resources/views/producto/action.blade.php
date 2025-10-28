@@ -10,7 +10,7 @@
                     </div>
 
                     <div class="card-body">
-                        <form
+                        <form id="form_productos"
                             action="{{ isset($registro) ? route('productos.update', $registro->id) : route('productos.store') }}"
                             method="POST" enctype="multipart/form-data">
                             @csrf
@@ -18,7 +18,7 @@
                                 @method('PUT')
                             @endif
                             <div class="row">
-                                <div class="col-md-4 mb-3">
+                                <div class="col-md-2 mb-3">
                                     <label for="codigo" class="form-label">Codigo</label>
                                     <input type="text" class="form-control @error('codigo') is-invalid @enderror"
                                         id="codigo" name="codigo" value="{{ old('codigo', $registro->codigo ?? '') }}"
@@ -27,7 +27,7 @@
                                         <small class="text-danger">{{ $message }}</small>
                                     @enderror
                                 </div>
-                                <div class="col-md-4 mb-3">
+                                <div class="col-md-2 mb-3">
                                     <label for="nombre" class="form-label">Nombre</label>
                                     <input type="text"
                                         class="form-control @error('nombre', $registro->nombre ?? '') is-invalid @enderror"
@@ -37,7 +37,7 @@
                                         <small class="text-danger">{{ $message }}</small>
                                     @enderror
                                 </div>
-                                <div class="col-md-4 mb-3">
+                                <div class="col-md-2 mb-3">
                                     <label for="precio" class="form-label">Precio</label>
                                     <input type="text"
                                         class="form-control @error('precio', $registro->precio ?? '') is-invalid @enderror"
@@ -46,6 +46,36 @@
                                     @error('precio')
                                         <small class="text-danger">{{ $message }}</small>
                                     @enderror
+                                </div>
+
+                                <div class="col-md-2 mb-3">
+                                    <label for="categoria" class="form-label">Categoria</label>
+                                    <select class="form-select" name="categoria" id="activo">
+                                        @foreach ($categorias as $categoria)
+                                            <option value="{{ $categoria->id }}">{{ $categoria->name }}</option>
+                                        @endforeach
+                                    </select>
+                                    @error('activo')
+                                        <small class="text-danger">{{ $mensaje }}</small>
+                                    @enderror
+                                </div>
+
+
+                                <div class="col-md-2 mb-3">
+                                    <label for="utilidad" class="form-label">Utilidad</label>
+                                    <input type="text"
+                                        class="form-control @error('utilidad', $registro->utilidad ?? '') is-invalid @enderror"
+                                        id="utilidad" name="utilidad"
+                                        value="{{ old('utilidad', $registro->utilidad ?? '') }}" required>
+                                    @error('utilidad')
+                                        <small class="text-danger">{{ $message }}</small>
+                                    @enderror
+                                </div>
+
+                                <div class="col-md-2 mb-3">
+                                    <label for="precio_venta" class="form-label">Precio Venta</label>
+                                    <input type="text" class="form-control" id="precio_venta" name="precio_venta"
+                                        value="{{ old('precio_venta', $registro->precio_venta ?? '') }}" disabled required>
                                 </div>
                             </div>
                             <div class="row">
@@ -69,7 +99,7 @@
                                         <div class="mt-2">
                                             <img src="{{ asset('uploads/productos/' . $registro->imagen) }}"
                                                 alt="Imagen Actual"
-                                                style="max-width:150px; height:auto; border-radius:8px;">
+                                                style="max-width:300px; height:auto; border-radius:8px;">
                                         </div>
                                     @endif
                                 </div>

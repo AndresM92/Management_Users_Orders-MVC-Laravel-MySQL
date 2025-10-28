@@ -35,47 +35,35 @@
 <body class="layout-fixed sidebar-expand-lg sidebar-open bg-body-tertiary">
 
     <div class="app-wrapper">
-        <!--begin::Header-->
+
         @include('layaout.header')
-        <!--end::Header-->
-        <!--begin::Sidebar-->
+
         @include('layaout.menu')
-        <!--end::Sidebar-->
-        <!--begin::App Main-->
+
         <main class="app-main">
-            <!--begin::App Content Header-->
+
             <div class="app-content-header">
-                <!--begin::Container-->
+
                 <div class="container-fluid">
-                    <!--begin::Row-->
+
                     <div class="row">
                     </div>
-                    <!--end::Container-->
+
                 </div>
-                <!--end::App Content Header-->
-                <!--begin::App Content-->
+
                 <div class="app-content">
-                    <!--begin::Container-->
                     @yield('contenido')
-                    <!--end::Container-->
+
                 </div>
-                <!--end::App Content-->
         </main>
-        <!--end::App Main-->
-        <!--begin::Footer-->
+
         <footer class="app-footer">
-            <!--begin::To the end-->
             <div class="float-end d-none d-sm-inline">Anything you want</div>
-            <!--end::To the end-->
-            <!--begin::Copyright-->
-            <strong>
-                Copyright &copy; 2025&nbsp;
+            <strong> Copyright &copy; 2025&nbsp;
                 <a href="#" class="text-decoration-none">Andres M.</a>.
             </strong>
             All rights reserved.
-            <!--end::Copyright-->
         </footer>
-        <!--end::Footer-->
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/overlayscrollbars@2.11.0/browser/overlayscrollbars.browser.es6.min.js"
@@ -84,6 +72,7 @@
     </script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.min.js" crossorigin="anonymous"></script>
     <script src="{{ asset('js/adminlte.js') }}"></script>
+    <script src="{{ asset('js/scripts.js') }}"></script>
 
     <script>
         const SELECTOR_SIDEBAR_WRAPPER = '.sidebar-wrapper';

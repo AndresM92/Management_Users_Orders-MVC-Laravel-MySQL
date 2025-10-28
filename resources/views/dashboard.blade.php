@@ -11,7 +11,7 @@
 
                     <div class="card-body">
                         @if (Session::has('mensaje'))
-                            <div class="alert alert-info alert-dimissible fade show mt-2">
+                            <div class="alert alert-info alert-dimissible fade show mt-2"  id="alertss">
                                 {{Session::get('mensaje')}}
                                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="close"></button>
                             </div>
