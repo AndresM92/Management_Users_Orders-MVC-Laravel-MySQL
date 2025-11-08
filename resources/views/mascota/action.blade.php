@@ -84,7 +84,7 @@
                                                     <input type="date"
                                                         class="form-control @error('date_birth') is-invalid @enderror"
                                                         id="date_birth" name="date_birth"
-                                                        value="{{ old('date_birth', $mascota->date_birth ?? '') }}"
+                                                        value="{{ old('date_birth') ?: (isset($mascota) ? $mascota->date_birth->format('Y-m-d') : '') }}"
                                                         required>
                                                     @error('date_birth')
                                                         <small class="text-danger">{{ $message }}</small>
@@ -100,7 +100,7 @@
 
                                                         @foreach ($generos as $genero)
                                                             <option value="{{ $genero }}"
-                                                                {{ old('gener', $mascota->gener ?? '') == $genero->value ? 'selected' : '' }}>
+                                                                {{ old('gener', $mascota->gener ?? '') === $genero->value ? 'selected' : '' }}>
                                                                 {{ $genero->name }}
                                                             </option>
                                                         @endforeach

@@ -31,7 +31,7 @@
     @include('web.partials.footer')
 
     <a class="whatsapp-button" href="https://wa.me/57" target="_blank"><img
-            src="{{ asset('Assets/icons/whatsapp.png') }}"></a>
+            src="{{ asset('assets/icons/whatsapp.png') }}"></a>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
         <link href="{{ asset('css/toastr.min.css') }}" rel="stylesheet" />
 

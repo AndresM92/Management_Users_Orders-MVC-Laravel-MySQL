@@ -39,14 +39,13 @@ Route::middleware(['auth'])->group(function () {
 
     //Route::get('mascotas/{user}/enviar-historial', [MascotasController::class, 'send_historial'])->name('mascotas.send_historial_clinico');
 
-    Route::get('mascotas/pdf/ver/{id}', [MascotasController::class, 'verEnLinea'])->name('pdf.ver');
+    //Route::get('mascotas/pdf/ver/{id}', [MascotasController::class, 'verEnLinea'])->name('pdf.ver');
     Route::get('mascotas/{user}/pdf/enviar', [MascotasController::class, 'send_historial'])->name('mascotas.send_historial_clinico');
+    Route::get('/mascotas/imagen/{filename}', [MascotasController::class, 'mostrarImagen']);
 
     Route::post('/pedido/realizar', [PedidoController::class, 'realizar'])->name('pedido.realizar');
     Route::get('/perfil/pedidos', [PedidoController::class, 'index'])->name('perfil.pedidos');
     Route::patch('/pedidos/{id}/estado', [PedidoController::class, 'changeState'])->name('pedidos.changeStateSend');
-
-
 
     Route::resource('roles', RoleController::class);
 

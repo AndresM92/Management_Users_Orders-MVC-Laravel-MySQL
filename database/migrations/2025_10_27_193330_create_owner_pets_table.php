@@ -11,10 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('users', function (Blueprint $table) {
-            
-            $table->string('google_id')->unique()->nullable();
-
+        Schema::create('owner_pets', function (Blueprint $table) {
+            $table->id();
+            $table->string('name');
+            $table->string('email')->unique();
+            $table->string('N_cellphone')->nullable();
+            $table->string('address')->nullable();
+            $table->timestamps();
         });
     }
 
@@ -23,10 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('users', function (Blueprint $table) {
-
-            $table->dropColumn('google_id');
-
-        });
+        Schema::dropIfExists('owner_pets');
     }
 };

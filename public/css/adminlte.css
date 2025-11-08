@@ -12940,8 +12940,10 @@ textarea.form-control-lg {
 .sidebar-brand .brand-link .brand-image {
   float: left;
   width: auto;
-  max-height: 33px;
+  max-height: 40px;
+  max-width: 50px;
   line-height: 0.8;
+  border-radius: 20px;
 }
 .sidebar-brand .brand-link .brand-image-xs {
   float: left;
@@ -12953,6 +12955,7 @@ textarea.form-control-lg {
 .sidebar-brand .brand-link .brand-image-xl {
   width: auto;
   max-height: 40px;
+  max-width: 50px;
   line-height: 0.8;
 }
 .sidebar-brand .brand-link .brand-image-xl.single {

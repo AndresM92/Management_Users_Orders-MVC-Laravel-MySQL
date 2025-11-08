@@ -11,9 +11,9 @@
         <div class="social">
             <a href="https://wa.me/57" target="_blank"><img src="{{asset('assets/icons/whatsapp.png')}}"></a>
             <a href="" target="_blank"><img
-                    src="{{asset('Assets/icons/facebook.png')}}"></a>
+                    src="{{asset('assets/icons/facebook.png')}}"></a>
             <a href="" target="_blank"><img
-                    src="{{asset('Assets/icons/instagram.png')}}"></a>
+                    src="{{asset('assets/icons/instagram.png')}}"></a>
 
         </div>
         <ul class="list-inline">

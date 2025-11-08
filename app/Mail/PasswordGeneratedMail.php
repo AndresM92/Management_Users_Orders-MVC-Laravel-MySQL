@@ -25,7 +25,7 @@ class PasswordGeneratedMail extends Mailable
 
     public function build()
     {
-        return $this->subject('Tu contraseña de acceso a Store01')
+        return $this->subject('Tu contraseña de acceso a MasCotas')
             ->view('emails.generated-password');
     }
 }

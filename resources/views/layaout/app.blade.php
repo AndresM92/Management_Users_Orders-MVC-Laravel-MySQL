@@ -13,7 +13,7 @@
     <meta name="author" content="Andres" />
     <meta name="description" content="Sistema" />
     <meta name="keywords" content="Sistema" />
-
+    <link rel="icon" type="image/x-icon" href="{{ asset('assets/favicon.ico') }}" style="border-radius: 10px;" />
     <meta name="supported-color-schemes" content="light dark" />
     <link rel="preload" href="../css/adminlte.css" as="style" />
 
@@ -60,7 +60,7 @@
         <footer class="app-footer">
             <div class="float-end d-none d-sm-inline">Anything you want</div>
             <strong> Copyright &copy; 2025&nbsp;
-                <a href="#" class="text-decoration-none">Andres M.</a>.
+                <a href="#" class="text-decoration-none">Andres M.</a>
             </strong>
             All rights reserved.
         </footer>

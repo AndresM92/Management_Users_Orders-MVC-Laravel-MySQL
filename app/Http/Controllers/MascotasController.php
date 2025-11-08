@@ -6,13 +6,16 @@ use Illuminate\Http\Request;
 use App\Http\Requests\MascotaRequest;
 use App\Models\Mascota;
 use App\Models\OwnerPet;
+use Illuminate\Support\Facades\Response;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\URL;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Storage;
 use App\Enums\GenerMascota;
 use App\Mail\HistorialGeneratedMail;
+use Carbon\Carbon;
 
 
 class MascotasController extends Controller
@@ -23,8 +26,15 @@ class MascotasController extends Controller
         //$this->authorize('veter-');
         $text = $request->input('text');
 
-        $registro = Mascota::with('owner')->where('name_pet', 'like', "%{$text}%")
-            //->orWhere('name_owner', 'like', "%{$text}%")
+        $registro = Mascota::with('owner')
+            ->where(function ($query) use ($text) {
+                $query->where('name_pet', 'like', "%{$text}%")
+                    ->orWhere('gener', 'like', "%{$text}%");
+            })
+            ->whereHas('owner', function ($query) use ($text) {
+                $query->where('name', 'like', "%{$text}%");
+                $query->where('email', 'like', "%{$text}%");
+            })
             ->orderBy('id', 'desc')
             ->paginate(10);
 
@@ -58,14 +68,17 @@ class MascotasController extends Controller
         $mascota->gener = $request->gener;
         $mascota->date_birth = $request->date_birth;
         $mascota->medical_history = $request->medical_history;
-        
+
         $sufijo = strtolower(Str::random(2));
         $image = $request->file('imagen');
+
+
         if (!is_null($image)) {
             $nombreImagen = $sufijo . '-' . $image->getClientOriginalName();
             $image->move('uploads/mascotas', $nombreImagen);
             $mascota->imagen = $nombreImagen;
         }
+
 
         $mascota->owner_id = $owner->id;
         $mascota->save();
@@ -106,18 +119,66 @@ class MascotasController extends Controller
         //$this->authorize('veter-');
     }
 
+    public function mostrarImagen($filename)
+    {
+        $path = storage_path('app/private/mascotas/' . $filename);
+
+        if (!file_exists($path)) {
+            abort(404);
+        }
+
+        return response()->file($path);
+    }
+
 
     public function edit(string $id)
     {
         //$this->authorize('veter-');
         $mascota = Mascota::with('owner')->findOrFail($id);
         $generos = GenerMascota::cases();
-        return view('mascota.action', compact('mascota','generos'));
+        return view('mascota.action', compact('mascota', 'generos'));
     }
-
 
     public function update(MascotaRequest $request, string $id)
     {
+
+
+        $owner_pet = Mascota::with('owner')->findOrFail($id);
+        $owner_pet->owner->update([
+            'name' => $request->name,
+            'email' => $request->email,
+            'N_cellphone' => $request->N_cellphone,
+            'address' => $request->address,
+        ]);
+
+        $registro_imagen = $owner_pet->imagen;
+        $sufijo = strtolower(Str::random(2));
+        $image = $request->file('imagen');
+
+        if (!is_null($image)) {
+            $nombreImagen = $sufijo . '-' . $image->getClientOriginalName();
+            $image->move('uploads/mascotas', $nombreImagen);
+            $old_image = 'uploads/mascotas/' . $registro_imagen;
+            if (file_exists($old_image)) {
+                @unlink($old_image);
+            }
+            $registro_imagen = $nombreImagen;
+        }
+
+
+        $mascota1 = Mascota::findOrFail($id);
+
+        $mascota1->update([
+            'name_pet' => $request->name_pet,
+            'specie' => $request->specie,
+            'breed' => $request->breed,
+            'gener' => $request->gener,
+            'date_birth' => $request->date_birth,
+            'medical_history' => $request->medical_history,
+            'imagen' => $registro_imagen,
+        ]);
+
+        /*
         //$this->authorize('veter-');
         $registro = Mascota::findOrFail($id);
         $registro->name_pet = $request->input('name_pet');
@@ -139,7 +200,8 @@ class MascotasController extends Controller
         }
 
         $registro->save();
-        return redirect()->route('mascotas.index')->with('mensaje', 'Registro ' . $registro->name_pet . ' actualizado correctamente');
+        */
+        return redirect()->route('mascotas.index')->with('mensaje', 'Registro actualizado correctamente');
     }
 
 
@@ -158,55 +220,47 @@ class MascotasController extends Controller
     public function send_historial(string $id)
     {
 
-        /*
-        $registro = Mascota::find($id);
-        $historial = $registro->historial_clinico;
+        $registro = Mascota::with('owner')->findOrFail($id);
 
-       if (empty($historial)) {
-            return back()->with('mensaje', 'El historial clínico está vacío.');
-        }
+        $pdf = Pdf::setOptions([
+            'isRemoteEnabled' => true,
+            'chroot' => public_path(),
+        ])->loadView('pdf.historial_clinico_mascota', compact('registro'))
+            ->setPaper('letter', 'portrait');
 
-        Mail::to($registro->email_owner)->send(new HistorialGeneratedMail($registro, $historial)); 
-        return redirect()->route('mascotas.index')->with('mensaje', 'El historial clinico de ' . $registro->name_pet . ' fue enviado');
-        */
+        //$pdf = Pdf::loadView('pdf.historial_clinico_mascota', compact('registro'));
+        $fileName = 'Historial_clinico_' . $registro->name_pet . '.pdf';
+        $filePath = 'temp/' . $fileName;
+        Storage::disk('public')->put($filePath, $pdf->output());
 
-        $registro = Mascota::findOrFail($id);
-        $url = URL::temporarySignedRoute(
-            'pdf.ver',
-            now()->addMinutes(2),
-            ['id' => $id]
-        );
-        Mail::to($registro->email_owner)->send(new HistorialGeneratedMail($url));
+        // Enviar correo con el PDF adjunto
+        Mail::to($registro->owner->email)->send(new HistorialGeneratedMail($filePath, $registro));
+
+        // Eliminar el PDF después del envío
+        Storage::disk('public')->delete($filePath);
+
         return redirect()->route('mascotas.index')->with('mensaje', 'El historial clinico de ' . $registro->name_pet . ' fue enviado');
     }
 
     public function verEnLinea(string $id)
     {
-        //$registro = Mascota::findOrFail($id);
-
-        $registro = [
-            'id' => $id,
-            'nombre' => 'Luna',
-            'especie' => 'Canino',
-            'raza' => 'Golden Retriever',
-            'sexo' => 'Hembra',
-            'edad' => 3,
-            'color' => 'Dorado',
-            'propietario' => 'María López',
-            'telefono' => '555-123-4567',
-            'correo' => 'maria@example.com',
-            'direccion' => 'Calle Falsa 123, Ciudad',
-            'historial' => [
-                ['fecha' => '2025-05-12', 'procedimiento' => 'Vacuna antirrábica', 'observaciones' => 'Sin reacciones'],
-                ['fecha' => '2025-08-10', 'procedimiento' => 'Desparasitación', 'observaciones' => 'Todo normal'],
-            ],
-            'diagnostico' => 'Alergia leve en la piel',
-            'tratamiento' => 'Aplicar crema antihistamínica y control semanal',
-        ];
-
-        $pdf = Pdf::loadView('pdf.historial_clinico_mascota', compact('registro'))
-            ->setOptions(['isRemoteEnabled' => true])
+        $registro = Mascota::with('owner')->findOrFail($id);
+        $pdf = Pdf::setOptions([
+            'isRemoteEnabled' => true,
+            'chroot' => public_path(),
+        ])->loadView('pdf.historial_clinico_mascota', compact('registro'))
             ->setPaper('letter', 'portrait');
+
+        $fileName = 'Historial_clinico_' . $registro->name_pet . '.pdf';
+        $filePath = 'temp/' . $fileName;
+
+        Storage::disk('public')->put($filePath, $pdf->output());
+
+        // Enviar correo con el PDF adjunto
+
+        // Eliminar el PDF después del envío
+        Storage::disk('public')->delete($filePath);
+
 
         return $pdf->stream('reporte.pdf');
     }

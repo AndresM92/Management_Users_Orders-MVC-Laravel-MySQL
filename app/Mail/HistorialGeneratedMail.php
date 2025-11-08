@@ -9,6 +9,8 @@ use Illuminate\Mail\Mailables\Content;
 use App\Models\Mascota;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Storage;
+
 
 class HistorialGeneratedMail extends Mailable
 {
@@ -33,16 +35,19 @@ class HistorialGeneratedMail extends Mailable
     */
     use Queueable, SerializesModels;
 
-    public $url;
+    public $filePath;
+    public $data;
 
-    public function __construct($url)
+    public function __construct($filePath, $data)
     {
-        $this->url = $url;
+        $this->filePath = $filePath;
+        $this->data = $data;
     }
 
     public function build()
     {
-        return $this->subject('Tu reporte está listo')
-            ->view('emails.send_historial');
+        return $this->subject('Historia clinica de ' . $this->data->name_pet)
+            ->view('emails.send_historial')
+            ->attach(Storage::disk('public')->path($this->filePath));
     }
 }

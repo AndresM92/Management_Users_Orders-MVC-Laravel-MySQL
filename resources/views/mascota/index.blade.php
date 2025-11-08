@@ -82,7 +82,7 @@
                                                 </td>
                                                 <td>{{ $reg->name_pet }}</td>
                                                 <td>{{ $reg->breed }}</td>
-                                                <td>{{ $reg->date_birth }}</td>
+                                                <td>{{ $reg->edad }}</td>
                                                 <td>{{ $reg->owner->name }}</td>
                                                 <td>{{ $reg->owner->email }}</td>
                                                 <td>
@@ -91,14 +91,18 @@
                                                         Ver historial
                                                     </button>
                                                 </td>
-                                                <td>{{ $reg->imagen }}</td>
+
                                                 <td>
                                                     @if ($reg->imagen)
-                                                        <img src="{{ asset('uploads/mascotas/' . $reg->imagen) }}"
+                                                        <img src= "{{ asset('uploads/mascotas/' . $reg->imagen) }}"
                                                             alt="{{ $reg->name_pet }}"
                                                             style="max-width:150px; height: 100px;">
-                                                    @else
-                                                        <span>Sin imagen</span>
+
+                                                        <img src= "{{ url('mascotas/imagen/' . $reg->imagen) }}"
+                                                        alt="{{ $reg->name_pet }}"
+                                                            style="max-width:150px; height: 100px;">
+                                                        @else <span>Sin imagen</span>
+
                                                     @endif
                                                 </td>
                                             </tr>

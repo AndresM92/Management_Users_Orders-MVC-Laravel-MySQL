@@ -28,7 +28,7 @@ class MascotaRequest extends FormRequest
         $rules = [
             'name_pet' => ['required', 'string', 'max:30'],
             'specie' => ['required', 'string', 'max:20'],
-            'breed' => ['required', 'string', 'max:15'],
+            'breed' => ['required', 'string', 'max:100'],
             'gener' => ['required', new Enum(GenerMascota::class)],
             'date_birth' => ['required', 'date_format:Y-m-d'],
             'medical_history' => ['nullable', 'string', 'max:5000'],
@@ -37,7 +37,7 @@ class MascotaRequest extends FormRequest
             'name' => ['required', 'string', 'max:50'],
             'email' => ['required', 'email'],
             'N_cellphone' => ['required', 'string', 'max:13'],
-            'address' => ['required', 'string', 'max:50'],
+            'address' => ['required', 'string', 'max:100'],
         ];
         return $rules;
     }
@@ -54,7 +54,7 @@ class MascotaRequest extends FormRequest
             'gener.required' => 'El genero de la mascota es obligatorio.',
 
             'breed.required' => 'La raza de la mascota es obligatorio.',
-            'breed.max' => 'La raza no puede tener más de 30 caracteres.',
+            'breed.max' => 'La raza no puede tener más de 100 caracteres.',
 
             'date_birth.required' => 'La fecha de nacimiento de la mascota es obligatorio.',
             'date_birth.date' => 'Formato de fecha invalido debe ser: Y-m-d',
