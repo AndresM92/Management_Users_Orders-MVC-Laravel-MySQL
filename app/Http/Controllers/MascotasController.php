@@ -72,43 +72,14 @@ class MascotasController extends Controller
         $sufijo = strtolower(Str::random(2));
         $image = $request->file('imagen');
 
-
         if (!is_null($image)) {
             $nombreImagen = $sufijo . '-' . $image->getClientOriginalName();
             $image->move('uploads/mascotas', $nombreImagen);
             $mascota->imagen = $nombreImagen;
         }
 
-
         $mascota->owner_id = $owner->id;
         $mascota->save();
-        /*
-
-        $registro_imagen = null;
-        $owner_pet = OwnerPet::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'N_cellphone' => $request->N_cellphone,
-            'address' => $request->address,
-        ]);
-
-        $sufijo = strtolower(Str::random(2));
-        $image = $request->file('imagen');
-        if (!is_null($image)) {
-            $nombreImagen = $sufijo . '-' . $image->getClientOriginalName();
-            $image->move('uploads/mascotas', $nombreImagen);
-            $registro_imagen = $nombreImagen;
-        }
-
-        $owner_pet->mascotas()->create([
-            'name_pet' => $request->name_pet,
-            'specie' => $request->specie,
-            'breed' => $request->breed,
-            'gener' => $request->gener,
-            'date_birth' => $request->date_birth,
-            'medical_history' => $request->medical_history,
-            'imagen' => $registro_imagen,
-        ]);*/
 
         return redirect()->route('mascotas.index')->with('mensaje', 'Registro agregado correctamente');
     }
@@ -178,29 +149,6 @@ class MascotasController extends Controller
             'imagen' => $registro_imagen,
         ]);
 
-        /*
-        //$this->authorize('veter-');
-        $registro = Mascota::findOrFail($id);
-        $registro->name_pet = $request->input('name_pet');
-        $registro->breed = $request->input('breed');
-        $registro->age = $request->input('age');
-        $registro->name_owner = $request->input('name_owner');
-        $registro->email_owner = $request->input('email_owner');
-        $registro->historial_clinico = $request->input('historial_clinico');
-        $sufijo = strtolower(Str::random(2));
-        $image = $request->file('imagen');
-        if (!is_null($image)) {
-            $nombreImagen = $sufijo . '-' . $image->getClientOriginalName();
-            $image->move('uploads/mascotas', $nombreImagen);
-            $old_image = 'uploads/mascotas/' . $registro->imagen;
-            if (file_exists($old_image)) {
-                @unlink($old_image);
-            }
-            $registro->imagen = $nombreImagen;
-        }
-
-        $registro->save();
-        */
         return redirect()->route('mascotas.index')->with('mensaje', 'Registro actualizado correctamente');
     }
 
@@ -228,15 +176,10 @@ class MascotasController extends Controller
         ])->loadView('pdf.historial_clinico_mascota', compact('registro'))
             ->setPaper('letter', 'portrait');
 
-        //$pdf = Pdf::loadView('pdf.historial_clinico_mascota', compact('registro'));
         $fileName = 'Historial_clinico_' . $registro->name_pet . '.pdf';
         $filePath = 'temp/' . $fileName;
         Storage::disk('public')->put($filePath, $pdf->output());
-
-        // Enviar correo con el PDF adjunto
         Mail::to($registro->owner->email)->send(new HistorialGeneratedMail($filePath, $registro));
-
-        // Eliminar el PDF después del envío
         Storage::disk('public')->delete($filePath);
 
         return redirect()->route('mascotas.index')->with('mensaje', 'El historial clinico de ' . $registro->name_pet . ' fue enviado');
@@ -253,14 +196,8 @@ class MascotasController extends Controller
 
         $fileName = 'Historial_clinico_' . $registro->name_pet . '.pdf';
         $filePath = 'temp/' . $fileName;
-
         Storage::disk('public')->put($filePath, $pdf->output());
-
-        // Enviar correo con el PDF adjunto
-
-        // Eliminar el PDF después del envío
         Storage::disk('public')->delete($filePath);
-
 
         return $pdf->stream('reporte.pdf');
     }
